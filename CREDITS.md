@@ -1,7 +1,10 @@
 # Credits
 
-*Arma: Cold War Assault Remastered* (engine source, codename **Poseidon** / CWR) exists thanks
-to the people and projects below.
+**CWR-RE** is a community fork of the engine source (codename **Poseidon** / CWR) that
+Bohemia Interactive released for *Arma: Cold War Assault Remastered*
+(<https://github.com/BohemiaInteractive/CWR>). CWR-RE is not affiliated with or endorsed by
+Bohemia Interactive. The original source release exists thanks to the people and projects
+below; their credits are kept unchanged.
 
 ## Bohemia Interactive
 

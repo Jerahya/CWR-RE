@@ -1,6 +1,6 @@
 # Poseidon P3D Importer for Blender
 
-Blender addon for importing Arma: Cold War Assault - Remastered P3D models.
+Blender addon for importing Poseidon engine P3D models (CWR-RE).
 Supports both MLOD (source) and ODOL v7 (binarized) formats with textures, selections, and proxies.
 
 ## Quick Install

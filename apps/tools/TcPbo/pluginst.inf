@@ -1,5 +1,5 @@
 [plugininstall]
-description=PBO Archive Plugin for Operation Flashpoint
+description=PBO Archive Plugin for CWR-RE
 type=wcx
 file=pbo.wcx64
 defaultdir=pbo

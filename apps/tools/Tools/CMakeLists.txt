@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 project(PoseidonTools
     VERSION 1.0.0
-    DESCRIPTION "Command-line tools for Operation Flashpoint model formats"
+    DESCRIPTION "Command-line tools for Poseidon engine model formats"
     LANGUAGES CXX
 )
 find_package(CLI11 CONFIG REQUIRED)

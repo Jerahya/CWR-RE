@@ -39,7 +39,7 @@ std::string DiagnosticsDir()
 {
     if (GamePaths::Instance().IsInitialized())
         return GamePaths::Instance().UserContentDir();
-    return GamePaths::ResolveUserContentDir("CWR", "Cold War Assault");
+    return GamePaths::ResolveUserContentDir("CWR-RE", "CWR-RE");
 }
 } // namespace
 

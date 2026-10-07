@@ -97,7 +97,7 @@ bool GameBase::ParseCommandLine(const char* commandLine)
 #endif
         {
             LOG_ERROR(Core, "Failed to change working directory to: {}", workDir);
-            Poseidon::Foundation::ShowStartupError("Cold War Assault - Startup Error",
+            Poseidon::Foundation::ShowStartupError("CWR-RE - Startup Error",
                                                    ("Failed to change working directory to:\n" + workDir).c_str());
             m_startupExitCode = 2;
             return false;
@@ -111,7 +111,7 @@ bool GameBase::ParseCommandLine(const char* commandLine)
     {
         LOG_ERROR(Core, "Command-line parsing failed: {}", AppConfig::Instance().GetParseFatalError());
         Poseidon::Foundation::ShowStartupError(
-            "Cold War Assault - Startup Error",
+            "CWR-RE - Startup Error",
             ("Command-line error:\n" + AppConfig::Instance().GetParseFatalError()).c_str());
         m_startupExitCode = AppConfig::Instance().GetParseFatalExitCode();
         return false;
@@ -152,7 +152,7 @@ bool GameBase::ParseCommandLine(const char* commandLine)
     }
 
     const std::string oldPathsRoot = std::filesystem::current_path().string();
-    GamePaths::Instance().Initialize("CWR", "ColdWarAssault", "Cold War Assault", AppConfig::Instance().OldPaths(),
+    GamePaths::Instance().Initialize("CWR-RE", "CWR-RE", "CWR-RE", AppConfig::Instance().OldPaths(),
                                      oldPathsRoot.c_str());
     Poseidon::ApplyGamePathsToLegacyGlobals();
 
@@ -194,7 +194,7 @@ bool GameBase::ParseCommandLine(const char* commandLine)
     {
         LOG_WARN(Core, "--log-file: {}", logFileError);
         Poseidon::Foundation::ShowStartupWarning(
-            "Cold War Assault - Startup Warning",
+            "CWR-RE - Startup Warning",
             ("The log file given by --log-file cannot be written:\n\n" + logFileError).c_str());
     }
 

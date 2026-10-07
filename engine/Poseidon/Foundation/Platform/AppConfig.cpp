@@ -219,7 +219,7 @@ std::string ResolveCliManagedModsDir()
     if (userDirEnv && userDirEnv[0] != '\0')
         return (std::filesystem::path(userDirEnv) / "content" / "Mods").string();
 
-    return (std::filesystem::path(getUserDocumentsDir("Cold War Assault")) / "Mods").string();
+    return (std::filesystem::path(getUserDocumentsDir("CWR-RE")) / "Mods").string();
 }
 } // namespace
 
@@ -297,8 +297,8 @@ void AppConfig::ParseCommandLine(int argc, char** argv)
         const std::string versionForVersionFlag = (const char*)Poseidon::GetVersionStringForState(
             ContainsCliArg(normalizedArgs, "--dev"), GApp != nullptr && GApp->IsDemo());
 
-        CLI::App app{serverRole ? "Arma: Cold War Assault - Remastered Dedicated Server"
-                                : "Arma: Cold War Assault - Remastered"};
+        CLI::App app{serverRole ? "CWR-RE Dedicated Server"
+                                : "CWR-RE"};
 
         // Disable default help flag so we can reuse -h for --height
         app.set_help_flag("--help,--help-full", "Print help and exit");
@@ -941,7 +941,7 @@ void AppConfig::ParseCommandLine(int argc, char** argv)
         catch (const CLI::CallForVersion&)
         {
             // --version was requested
-            const std::string version = "\nArma: Cold War Assault - Remastered v" + versionForVersionFlag + "\n";
+            const std::string version = "\nCWR-RE v" + versionForVersionFlag + "\n";
 #ifdef _WIN32
             WriteCliText(STD_OUTPUT_HANDLE, stdout, version);
             Sleep(50);

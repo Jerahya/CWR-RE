@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report a problem with CWR-RE
 title: ''
 labels: ''
 assignees: ''
@@ -8,11 +8,8 @@ assignees: ''
 ---
 
 <!--
-Use this template only for issues in official Bohemia Interactive builds distributed on Steam.
-Pull requests are not accepted in this repository.
-Ideas, improvements, feature requests, dev-build crashes, local fork bugs, and ports belong outside this tracker.
-You can share them in community forks, for example with the community release authors at https://github.com/ofpisnotdead-com/CWR-CE.
-Do not report security vulnerabilities in public issues.
+This tracker is for CWR-RE, a community fork. It is not affiliated with Bohemia Interactive.
+Do not attach game data, and do not report security vulnerabilities in public issues.
 -->
 
 ## Summary
@@ -23,7 +20,7 @@ Do not report security vulnerabilities in public issues.
 ## Details
 
 <!--
-Include the game version, logs, operating system, steps to reproduce, expected behavior, and actual behavior.
+Include the CWR-RE commit or version, logs, operating system, steps to reproduce, expected behavior, and actual behavior.
 -->
 
 

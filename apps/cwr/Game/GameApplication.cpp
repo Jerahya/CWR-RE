@@ -632,7 +632,7 @@ int GameApplication::RunAfterArgumentParsing()
 {
     LOG_INFO(Core, "Game starting: version {}", (const char*)GetVersionString());
 
-    constexpr const char* kStartupErrorTitle = "Cold War Assault - Startup Error";
+    constexpr const char* kStartupErrorTitle = "CWR-RE - Startup Error";
 
     if (!ReadConfiguration())
     {

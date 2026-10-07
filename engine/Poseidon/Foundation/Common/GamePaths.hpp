@@ -56,10 +56,10 @@ public:
 	static GamePaths& Instance();
 
 	/// Initialize paths from app-provided codename and config base name.
-	/// @param codename     Directory name for user/cache paths (e.g. "CWR")
-	/// @param cfgBase      Config file base name without extension (e.g. "ColdWarAssault")
+	/// @param codename     Directory name for user/cache paths (e.g. "CWR-RE")
+	/// @param cfgBase      Config file base name without extension (e.g. "CWR-RE")
 	/// @param productName  Friendly name for the user-content (Documents) folder
-	///                     (e.g. "Cold War Assault"); defaults to cfgBase.
+	///                     (e.g. "CWR-RE"); defaults to cfgBase.
 	/// Creates directories if they don't exist.
 	void Initialize(const char* codename, const char* cfgBase, const char* productName = nullptr,
 	                bool oldPaths = false, const char* oldPathsRoot = nullptr);
@@ -77,10 +77,10 @@ public:
 	/// POSEIDON_USER_CONTENT_DIR / POSEIDON_USER_DIR override). Prefer UserContentDir().
 	static std::string ResolveUserContentDir(const char* codename, const char* product);
 
-	/// App codename used for directory paths (e.g. "CWR").
+	/// App codename used for directory paths (e.g. "CWR-RE").
 	const std::string& Codename() const { return m_codename; }
 
-	/// Config filename (e.g. "ColdWarAssault.cfg").
+	/// Config filename (e.g. "CWR-RE.cfg").
 	const std::string& CfgName() const { return m_cfgName; }
 
 	/// User data directory for profiles, saves, config.

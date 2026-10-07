@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
 project(CWR
     VERSION 1.0.0
     LANGUAGES CXX C
-    DESCRIPTION "Arma: Cold War Assault - Remastered"
+    DESCRIPTION "CWR-RE - community fork of the Poseidon engine"
 )
 
 set(CMAKE_CXX_STANDARD 20)

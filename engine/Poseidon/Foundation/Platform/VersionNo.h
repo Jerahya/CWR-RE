@@ -6,7 +6,7 @@
 #define APP_NAME				"Galatea"
 #define APP_NAME_SHORT	"Galatea"
 #else
-#define APP_NAME				"Arma: Cold War Assault - Remastered"
+#define APP_NAME				"CWR-RE"
 #define APP_NAME_SHORT	"CWR"
 #endif
 
