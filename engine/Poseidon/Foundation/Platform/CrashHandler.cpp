@@ -150,6 +150,16 @@ void InstallCrashHandler(const char* crashDir)
 }
 } // namespace Poseidon::Foundation
 
+#elif defined(__SWITCH__)
+
+// Switch: no execinfo/backtrace and no POSIX signal delivery for CPU faults under
+// libnx; crashes fall through to the system's own crash reporting. A libnx
+// __libnx_exception_handler hook can be added here later.
+namespace Poseidon::Foundation
+{
+void InstallCrashHandler(const char* /*crashDir*/) {}
+} // namespace Poseidon::Foundation
+
 #else // _WIN32
 
 #include <Poseidon/Core/BuildInfo.hpp>

@@ -1,0 +1,24 @@
+{
+  "name": "cwr-switch",
+  "version": "1.0",
+  "description": "Switch-only manifest: portable libraries built by vcpkg. SDL3, openal-soft, curl, freetype, glad and Mesa come from devkitPro portlibs instead.",
+  "dependencies": [
+    "cjson",
+    "cli11",
+    "stb",
+    "zstd",
+    "opus",
+    "libogg",
+    "libvorbis",
+    "enkits",
+    "sse2neon",
+    "spdlog",
+    "imgui"
+  ],
+  "builtin-baseline": "170bd3bfb152a1795b67b5c2190ab7d899fc9971",
+  "overrides": [
+    { "name": "imgui", "version": "1.92.8", "port-version": 1 },
+    { "name": "cli11", "version": "2.4.0" },
+    { "name": "spdlog", "version": "1.15.1" }
+  ]
+}

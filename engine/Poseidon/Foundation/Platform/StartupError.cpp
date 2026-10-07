@@ -5,6 +5,9 @@
 #include <Poseidon/Foundation/Platform/AppConfig.hpp>
 
 #include <SDL3/SDL_messagebox.h>
+#ifdef __SWITCH__
+#include <Poseidon/Foundation/Platform/PlatformSwitch.hpp>
+#endif
 
 #include <cstdio>
 #include <cstdlib>
@@ -101,8 +104,16 @@ void ReportStartup(SDL_MessageBoxFlags severity, const char* title, const char* 
     fprintf(stderr, "\n%s\n%s\n\n", title, body.c_str());
     fflush(stderr);
 
+#ifdef __SWITCH__
+    // No desktop message box on Switch: the system error applet shows the short
+    // message, and its "Details" page the full body with log paths.
+    (void)severity;
+    if (ShouldWriteAutoLog())
+        SwitchShowError(message, body.c_str());
+#else
     if (ShouldShowGuiError())
         SDL_ShowSimpleMessageBox(severity, title, body.c_str(), nullptr);
+#endif
 }
 } // namespace
 

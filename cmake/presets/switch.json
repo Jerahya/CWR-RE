@@ -1,0 +1,28 @@
+{
+  "version": 6,
+  "include": [
+    "base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "switch-aarch64-rwdi",
+      "displayName": "Nintendo Switch homebrew (devkitA64) RelWithDebInfo — DRAFT",
+      "inherits": "base",
+      "binaryDir": "${sourceDir}/build/switch-aarch64-rwdi",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "VCPKG_TARGET_TRIPLET": "arm64-switch",
+        "VCPKG_MANIFEST_DIR": "${sourceDir}/cmake/switch/vcpkg",
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/switch-aarch64.cmake",
+        "CWR_SWITCH_TITLE_ID": "05C3A0C0DE000000"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "switch-aarch64-rwdi",
+      "configurePreset": "switch-aarch64-rwdi",
+      "targets": ["PoseidonGame_nro"]
+    }
+  ]
+}

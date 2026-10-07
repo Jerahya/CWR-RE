@@ -30,6 +30,12 @@ struct TerrainProfile {
         unsigned int lo, hi;
         __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
         return (static_cast<int64_t>(hi) << 32) | lo;
+#elif defined(__aarch64__) && defined(__SWITCH__)
+        // Horizon traps EL0 reads of the virtual counter; the physical counter is
+        // readable (libnx's armGetSystemTick uses it).
+        int64_t val;
+        __asm__ __volatile__("mrs %0, cntpct_el0" : "=r"(val));
+        return val;
 #elif defined(__aarch64__)
         int64_t val;
         __asm__ __volatile__("mrs %0, cntvct_el0" : "=r"(val));

@@ -1,5 +1,19 @@
 #include <Poseidon/Graphics/Shared/RenderDocCapture.hpp>
 
+#ifdef __SWITCH__
+
+// No RenderDoc (and no dynamic loader) on Switch: the capture API never attaches.
+namespace Poseidon::RdcCapture
+{
+bool Init() { return false; }
+bool Available() { return false; }
+void SetPathTemplate(const char*) {}
+void Trigger() {}
+const char* LastCapturePath() { return ""; }
+}
+
+#else
+
 #include <renderdoc/renderdoc_app.h>
 #include <stdint.h>
 #include <Poseidon/Foundation/Framework/Log.hpp>
@@ -120,3 +134,5 @@ const char* LastCapturePath()
 }
 } // namespace RdcCapture
 } // namespace Poseidon
+
+#endif // __SWITCH__

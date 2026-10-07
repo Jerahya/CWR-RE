@@ -3,7 +3,11 @@
 #include <Poseidon/Core/Global.hpp>
 #include <Poseidon/Foundation/Common/Win.h>
 #include <Poseidon/Foundation/Framework/AppFrame.hpp>
-#ifndef _WIN32
+#if defined(__SWITCH__)
+// Switch: no mmap/mprotect in libnx. MemGrow's only user (MemHeap via MemTable.cpp)
+// is excluded from the build, so reserve = plain allocation, commit = bookkeeping.
+#include <cstdlib>
+#elif !defined(_WIN32)
 #if __linux__
 #include <linux/sysinfo.h>
 #include <sys/sysinfo.h>
@@ -24,10 +28,12 @@ void MemGrow::DoConstruct()
     _commited = 0;
     _error = false;
 
-#ifdef _WIN32
+#if defined(_WIN32)
     SYSTEM_INFO info;
     GetSystemInfo(&info);
     _pageSize = info.dwPageSize;
+#elif defined(__SWITCH__)
+    _pageSize = 4096;
 #else
     _pageSize = (size_t)sysconf(_SC_PAGESIZE);
 #endif
@@ -58,9 +64,11 @@ void MemGrow::DoDestruct()
 {
     if (_data)
     {
-#ifdef _WIN32
+#if defined(_WIN32)
         ::VirtualFree(_data, _commited, MEM_DECOMMIT);
         ::VirtualFree(_data, 0, MEM_RELEASE);
+#elif defined(__SWITCH__)
+        std::free(_data);
 #else
         munmap(_data, _reserved);
 #endif
@@ -77,8 +85,10 @@ void MemGrow::Reserve(size_t size)
     size += _pageSize - 1;
     size &= ~(_pageSize - 1);
 
-#ifdef _WIN32
+#if defined(_WIN32)
     _data = ::VirtualAlloc(nullptr, size, MEM_RESERVE, PAGE_READWRITE);
+#elif defined(__SWITCH__)
+    _data = std::malloc(size);
 #else
     _data = mmap(nullptr, size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (_data == MAP_FAILED)
@@ -116,8 +126,10 @@ bool MemGrow::Commit(size_t size)
             return false;
         }
 
-#ifdef _WIN32
+#if defined(_WIN32)
         bool commitOk = (::VirtualAlloc(_data, size, MEM_COMMIT, PAGE_READWRITE) == _data);
+#elif defined(__SWITCH__)
+        bool commitOk = true;
 #else
         bool commitOk = (mprotect(_data, size, PROT_READ | PROT_WRITE) == 0);
 #endif
@@ -155,6 +167,8 @@ bool MemGrow::Commit(size_t size)
                          static_cast<unsigned long long>(ConvertToMB(_commited)),
                          static_cast<unsigned long long>(ConvertToMB(swap.xsu_total)),
                          static_cast<unsigned long long>(ConvertToMB(swap.xsu_avail)));
+#elif defined(__SWITCH__)
+            ErrorMessage("Cannot increase memory pool to %llu MB.", static_cast<unsigned long long>(ConvertToMB(size)));
 #else
             struct sysinfo si;
             sysinfo(&si);

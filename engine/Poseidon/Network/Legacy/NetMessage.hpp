@@ -188,7 +188,7 @@ extern unsigned netMessageToUnsigned(RefD<NetMessage>& msg);
 extern unsigned netMessageAddressToUnsigned(RefD<NetMessage>& msg);
 
 template <>
-struct ImplicitMapTraits<RefD<NetMessage>>
+struct Poseidon::Foundation::ImplicitMapTraits<RefD<NetMessage>>
 {
     static RefD<NetMessage> zombie;
     static RefD<NetMessage> null;

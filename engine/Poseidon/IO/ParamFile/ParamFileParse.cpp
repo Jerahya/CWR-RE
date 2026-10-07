@@ -5,6 +5,7 @@
 #include <Poseidon/IO/Streams/SerializeBin.hpp>
 #include <Poseidon/Foundation/Framework/LogFlags.hpp>
 #include <ctype.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -285,8 +286,11 @@ LSError ParamFile::Parse(const char* name)
 #ifdef _WIN32
     ::GetFullPathNameA(name, sizeof(fullPath), fullPath, nullptr);
 #else
-    if (!realpath(name, fullPath))
-        strncpy(fullPath, name, sizeof(fullPath) - 1);
+    // realpath's output buffer must hold PATH_MAX bytes (4096 on Linux/newlib); the
+    // implementation may use all of it, so resolving straight into the 512-byte log
+    // buffer overran the stack (crashed on Switch).
+    char resolved[PATH_MAX];
+    snprintf(fullPath, sizeof(fullPath), "%s", realpath(name, resolved) ? resolved : name);
 #endif
     LOG_DEBUG(Core, "ParamFile::Parse() - Loading config file: {}", fullPath);
 

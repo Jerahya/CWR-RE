@@ -121,8 +121,14 @@ bool GameBase::ParseCommandLine(const char* commandLine)
     // terrain segment generation both submit to this single instance. Auto-capped at
     // kDefaultMaxTaskThreads (a CWA-era game doesn't scale past it); --max-threads
     // overrides (0 = one per core).
-    Poseidon::InitGlobalTaskPool(Poseidon::ResolveTaskPoolThreadCount(AppConfig::Instance().GetMaxThreads(),
-                                                                      std::thread::hardware_concurrency()));
+    unsigned hardwareThreads = std::thread::hardware_concurrency();
+#ifdef __SWITCH__
+    // libnx reports 0; applications get cores 0-2 (core 3 belongs to the system).
+    if (hardwareThreads == 0)
+        hardwareThreads = 3;
+#endif
+    Poseidon::InitGlobalTaskPool(
+        Poseidon::ResolveTaskPoolThreadCount(AppConfig::Instance().GetMaxThreads(), hardwareThreads));
     if (auto* pool = Poseidon::GetGlobalTaskPool())
     {
         LOG_INFO(Core, "TaskPool initialised: {} task threads ({} logical cores)", pool->ThreadCount(),

@@ -104,7 +104,13 @@ HANDLE FileBufferMapped::GetFileHandle() const
 #else
 
 // POSIX implementation:
+#ifdef NO_MMAP
+// No mmap (Switch/libnx): MappingSupported() returns false so the engine prefers
+// loaded buffers; if a FileBufferMapped is still built, read the range instead.
+#include <cstdlib>
+#else
 #include <sys/mman.h>
+#endif
 #include <Poseidon/IO/Streams/QBStream.hpp>
 #include <Poseidon/IO/Filesystem/FileOps.hpp>
 
@@ -118,9 +124,18 @@ void FileBufferMapped::Open(HANDLE fileHandle, int start, int size)
     saturate(start, 0, fileSize);
     saturate(size, 0, fileSize - start);
 
+#ifdef NO_MMAP
+    _view = size > 0 ? std::malloc(size) : nullptr;
+    if (_view && pread(fileHandle, _view, size, start) != size)
+    {
+        std::free(_view);
+        _view = nullptr;
+    }
+#else
     _view = mmap(0, size, PROT_READ, MAP_PRIVATE, fileHandle, start);
     if (_view == MAP_FAILED)
         _view = nullptr;
+#endif
     else
     {
         _size = size;
@@ -160,8 +175,13 @@ FileBufferMapped::FileBufferMapped(const char* name, int start, int size)
 
 FileBufferMapped::~FileBufferMapped()
 {
+#ifdef NO_MMAP
+    if (_view)
+        std::free(_view), _size = 0, _view = nullptr;
+#else
     if (_view)
         munmap(_view, _size), _size = 0, _view = nullptr;
+#endif
     if (_fileHandle)
         close(_fileHandle), _fileHandle = 0;
 }
@@ -173,7 +193,12 @@ bool FileBufferMapped::GetError() const
 
 bool FileBufferMapped::IsFromBank(QFBank* bank) const
 {
+#ifdef NO_MMAP
+    (void)bank; // QFBank::BufferOwned(FileBufferMapped*) only exists with mapping
+    return false;
+#else
     return bank->BufferOwned(this);
+#endif
 }
 
 bool FileBufferMapped::IsReady() const

@@ -7,8 +7,8 @@ Flashpoint: Cold War Crisis*, 2001). The original source release lives at
 
 **This is a modified version of that program.** It is not the original program, it is
 not an official Bohemia Interactive product, and it is not affiliated with, endorsed by,
-or associated with Bohemia Interactive or Electronic Arts. See [What changed](#what-changed)
-and the commit history for the modifications.
+or associated with Bohemia Interactive or Electronic Arts. See the commit history for the
+modifications.
 
 Three things are worth keeping separate:
 
@@ -28,18 +28,12 @@ source code came from.
 
 Models, textures, sounds, missions, and voices are not in this repository and are not GPL.
 They are released separately by Bohemia Interactive under the APL-SA license. To run what you
-build, use game data from your own copy of the game: the full game, or the free Demo on
-Steam (<https://store.steampowered.com/app/4819000>).
+build, use the game data from your own Steam copy of the game:
+
+- *Arma: Cold War Assault Remastered* demo on Steam: <https://store.steampowered.com/app/4819000>
+- *Arma: Cold War Assault Remastered* full game on Steam: <https://store.steampowered.com/app/65790>
+
 This project does not distribute game data.
-
-## What changed
-
-Compared with the original source release, CWR-RE:
-
-- is renamed (window and tool titles, user folders, icons) and carries no original branding;
-- uses its own settings, saves and logs folders (`CWR-RE`), separate from the official game.
-
-Further engine and platform work is tracked in the commit history.
 
 ## Quick Start
 
@@ -49,6 +43,47 @@ cmake --build build/win-x64-clang-rwdi
 ```
 
 On GNU/Linux, use the matching `linux-x64-clang-rwdi` preset.
+
+## Nintendo Switch (homebrew)
+
+CWR-RE builds as a Switch homebrew application (`.nro`). It boots, renders through Mesa
+(OpenGL 4.3), plays audio, and runs single-player missions with a controller. Performance
+work is ongoing, and the mission editor's controller support is incomplete.
+
+No compiled Switch binaries are distributed, and no game data, keys, or console
+modification instructions are provided. You build it yourself, use the game data from your
+own Steam copy of the game (see [Game data](#game-data--assets--arma-public-license-share-alike-apl-sa)),
+and run it on hardware you are able to run homebrew on.
+
+### Requirements
+
+- [devkitPro](https://devkitpro.org/wiki/Getting_Started) with the `switch-dev` group and
+  these portlibs: `switch-mesa switch-glad switch-openal-soft switch-curl switch-freetype
+  switch-libvorbis switch-libogg switch-libopus switch-libzstd switch-mbedtls switch-zlib
+  switch-sdl2`
+- vcpkg (`VCPKG_ROOT`) and CMake 3.25+, as for the desktop build. On a Windows host, use the
+  native Windows CMake rather than the MSYS2 one shipped with devkitPro, and keep devkitPro's
+  `msys2\usr\bin` after it on `PATH`.
+
+### Build
+
+```sh
+cmake --preset switch-aarch64-rwdi
+cmake --build build/switch-aarch64-rwdi --target PoseidonGame_nro
+```
+
+The output is `build/switch-aarch64-rwdi/switch/PoseidonGame/PoseidonGame.nro`.
+
+### Run
+
+1. Copy `PoseidonGame.nro` to `sdmc:/switch/` on the SD card.
+2. Copy the contents of the `Remastered` folder from your Steam installation of the game to
+   `sdmc:/switch/cwr-re/data/`.
+3. Launch it from the homebrew menu. Settings, saves and logs go to `sdmc:/switch/cwr-re/`.
+
+The game needs the full application memory budget; in the limited applet mode it runs out
+of memory while loading. For development, `nxlink -s PoseidonGame.nro` sends the build over
+the network and streams the game log back to the PC.
 
 ## Layout
 
@@ -96,6 +131,11 @@ this repository** and are **not** covered by the GPL. They are released separate
 by Bohemia Interactive under the **Arma Public License Share Alike (APL-SA)**:
 
 - APL-SA license text: <https://www.bohemia.net/community/licenses/arma-public-license-share-alike>
+
+Get the game data from Steam:
+
+- *Arma: Cold War Assault Remastered* demo on Steam: <https://store.steampowered.com/app/4819000>
+- *Arma: Cold War Assault Remastered* full game on Steam: <https://store.steampowered.com/app/65790>
 
 Whatever you do with assets is governed by the APL-SA linked above; whatever you do
 with this source is governed by the GPL with additional terms per Section 7 in

@@ -20,8 +20,25 @@
 #endif
 
 #include <imgui.h>
+#ifndef __SWITCH__
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_opengl3.h>
+#else
+// Switch: SDL3 is emulated on SDL2 (SDL3Compat) and ImGui's SDL3 backend cannot
+// build against it. The overlay is a --dev desktop tool, so it stays disabled:
+// Init() fails here and every other entry point is gated on s_initialized.
+namespace
+{
+bool ImGui_ImplSDL3_InitForOpenGL(SDL_Window*, void*) { return false; }
+bool ImGui_ImplOpenGL3_Init(const char*) { return false; }
+void ImGui_ImplSDL3_Shutdown() {}
+void ImGui_ImplOpenGL3_Shutdown() {}
+bool ImGui_ImplSDL3_ProcessEvent(const SDL_Event*) { return false; }
+void ImGui_ImplSDL3_NewFrame() {}
+void ImGui_ImplOpenGL3_NewFrame() {}
+void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData*) {}
+} // namespace
+#endif
 #include <SDL3/SDL.h>
 #include <glad/gl.h>
 

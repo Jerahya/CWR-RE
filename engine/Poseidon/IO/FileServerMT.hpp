@@ -98,7 +98,7 @@ struct FileRequest
 
 
 template <>
-struct HeapTraits<FileRequest>
+struct Foundation::HeapTraits<FileRequest>
 {
 	static bool IsLess(const FileRequest &a, const FileRequest &b)
 	{
