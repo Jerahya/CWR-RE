@@ -56,7 +56,7 @@ void Poseidon::Foundation::WarnIfCppRuntimeIsOlder()
                       L"The game could crash or fail to start with the installed runtime.",
                       installed.major, installed.minor, HIWORD(versionInfo->dwFileVersionLS), required.major,
                       required.minor);
-            MessageBoxW(nullptr, message, L"Arma: Cold War Assault - Remastered",
+            MessageBoxW(nullptr, message, L"CWR-RE",
                         MB_OK | MB_ICONWARNING | MB_SETFOREGROUND);
         }
     }

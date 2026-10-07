@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
 project(CWR
     VERSION 1.0.0
     LANGUAGES CXX C
-    DESCRIPTION "Arma: Cold War Assault - Remastered"
+    DESCRIPTION "CWR-RE - community fork of the Poseidon engine"
 )
 
 set(CMAKE_CXX_STANDARD 20)
@@ -160,7 +160,11 @@ configure_file(
 )
 include_directories(${CMAKE_BINARY_DIR}/generated)
 
-find_package(Catch2 CONFIG REQUIRED)
+# Switch builds only the game client: no unit tests (Catch2 needs POSIX signals
+# newlib lacks) and no desktop tools.
+if(NOT CWR_PLATFORM_SWITCH)
+    find_package(Catch2 CONFIG REQUIRED)
+endif()
 find_package(enkiTS CONFIG REQUIRED)
 
 # dist/<preset>/{game,viewer,tools} - auto-create on build
@@ -191,34 +195,44 @@ elseif(DIST_PRESET_NAME MATCHES "^steamrt4-([^-]+)-clang(-(.*))?$")
 endif()
 set(DIST_DIR "${CMAKE_SOURCE_DIR}/dist/${DIST_PRESET_NAME}")
 
-add_subdirectory(engine/Poseidon)
-add_subdirectory(engine/PoseidonGL33)
-add_subdirectory(engine/PoseidonOpenAL)
-add_subdirectory(engine/PoseidonFormats)
-add_subdirectory(tests/unit/engine/Poseidon/Foundation)
-add_subdirectory(apps/tools/Evaluator)
-add_subdirectory(tests/unit/apps/Evaluator)
-add_subdirectory(tests/unit/engine/Poseidon)
-add_subdirectory(apps/cwr/GameBase)
-add_subdirectory(apps/cwr/Server)
-add_subdirectory(tests/unit/apps/Server)
+if(CWR_PLATFORM_SWITCH)
+    add_compile_options(-fsigned-char)
+    add_subdirectory(engine/SDL3Compat)
+    add_subdirectory(engine/Poseidon)
+    add_subdirectory(engine/PoseidonGL33)
+    add_subdirectory(engine/PoseidonOpenAL)
+    add_subdirectory(apps/cwr/GameBase)
+    add_subdirectory(apps/cwr/Game)
+else()
+    add_subdirectory(engine/Poseidon)
+    add_subdirectory(engine/PoseidonGL33)
+    add_subdirectory(engine/PoseidonOpenAL)
+    add_subdirectory(engine/PoseidonFormats)
+    add_subdirectory(tests/unit/engine/Poseidon/Foundation)
+    add_subdirectory(apps/tools/Evaluator)
+    add_subdirectory(tests/unit/apps/Evaluator)
+    add_subdirectory(tests/unit/engine/Poseidon)
+    add_subdirectory(apps/cwr/GameBase)
+    add_subdirectory(apps/cwr/Server)
+    add_subdirectory(tests/unit/apps/Server)
 
-if(POSEIDON_BUILD_FUZZERS)
-    add_subdirectory(apps/fuzzers/Fuzzer)
+    if(POSEIDON_BUILD_FUZZERS)
+        add_subdirectory(apps/fuzzers/Fuzzer)
+    endif()
+
+    add_subdirectory(apps/cwr/Game)
+    add_subdirectory(apps/cwr/GameDemo)
+    add_subdirectory(apps/tools/Tools)
+    add_subdirectory(apps/tools/TcPbo)
+    add_subdirectory(apps/tools/TcLister)
+    add_subdirectory(apps/tools/Studio)
+    add_subdirectory(tests/unit/apps/Studio)
+    add_subdirectory(apps/tetris/Tetris)
+    add_subdirectory(tests/unit/apps/Tetris)
+
+    include(${CMAKE_SOURCE_DIR}/cmake/TridentCTest.cmake)
+    register_trident_integration_ctests()
 endif()
-
-add_subdirectory(apps/cwr/Game)
-add_subdirectory(apps/cwr/GameDemo)
-add_subdirectory(apps/tools/Tools)
-add_subdirectory(apps/tools/TcPbo)
-add_subdirectory(apps/tools/TcLister)
-add_subdirectory(apps/tools/Studio)
-add_subdirectory(tests/unit/apps/Studio)
-add_subdirectory(apps/tetris/Tetris)
-add_subdirectory(tests/unit/apps/Tetris)
-
-include(${CMAKE_SOURCE_DIR}/cmake/TridentCTest.cmake)
-register_trident_integration_ctests()
 
 # ── Precompiled header ───────────────────────────────────────────────────────
 # The Poseidon static lib precompiles PoseidonPCH.hpp (see engine/Poseidon).
@@ -274,6 +288,9 @@ set(ANALYSIS_TARGETS
 )
 
 foreach(target ${ANALYSIS_TARGETS})
+    if(NOT TARGET ${target})
+        continue() # Switch builds a subset of targets
+    endif()
     get_target_property(target_sources ${target} SOURCES)
     get_target_property(target_source_dir ${target} SOURCE_DIR)
     

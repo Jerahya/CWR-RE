@@ -1631,7 +1631,7 @@ struct EncryptorInformation
 };
 
 template <>
-struct FindArrayKeyTraits<EncryptorInformation>
+struct Poseidon::Foundation::FindArrayKeyTraits<EncryptorInformation>
 {
     typedef const char* KeyType;
     static bool IsEqual(const char* a, const char* b) { return !strcmpi(a, b); }

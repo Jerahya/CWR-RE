@@ -6,6 +6,7 @@
 #include <Poseidon/Foundation/Platform/FPUSetup.hpp>
 #include <Poseidon/Foundation/Platform/PoseidonInit.hpp>
 #include <Poseidon/Core/Config/Config.hpp>
+#include <Poseidon/Core/Config/ConfigSystem.hpp>
 #include <Poseidon/Core/Config/UserConfig.hpp>
 #include <Poseidon/Foundation/Platform/AppConfig.hpp>
 #include <Poseidon/Foundation/Platform/GamePaths.hpp>
@@ -632,12 +633,28 @@ int GameApplication::RunAfterArgumentParsing()
 {
     LOG_INFO(Core, "Game starting: version {}", (const char*)GetVersionString());
 
-    constexpr const char* kStartupErrorTitle = "Cold War Assault - Startup Error";
+    constexpr const char* kStartupErrorTitle = "CWR-RE - Startup Error";
 
     if (!ReadConfiguration())
     {
         Poseidon::Foundation::ShowStartupError(
             kStartupErrorTitle, "Failed to load the game configuration.\nThe game data may be missing or invalid.");
+        return 1;
+    }
+
+    if (!Poseidon::ConfigSystem::Instance().IsConfigAvailable())
+    {
+        const std::string& workDir = AppConfig::Instance().GetWorkingDirectory();
+        std::string message = "Game data not found (no bin/config in ";
+        message += workDir.empty() ? std::string("the current directory") : workDir;
+        message += ").";
+#ifdef __SWITCH__
+        message += "\nCopy the game's Remastered folder contents to sdmc:/switch/cwr-re/data/.";
+#else
+        message += "\nStart the game from its data folder or pass -C <data folder>.";
+#endif
+        LOG_ERROR(Config, "{}", message);
+        Poseidon::Foundation::ShowStartupError(kStartupErrorTitle, message.c_str());
         return 1;
     }
 

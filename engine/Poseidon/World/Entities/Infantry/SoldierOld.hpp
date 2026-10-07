@@ -81,7 +81,7 @@ class ActionVehMap
 };
 
 template<>
-struct BankTraits<ActionMap>
+struct Foundation::BankTraits<ActionMap>
 {
 	typedef const ActionMapName &NameType;
 	static int CompareNames( NameType n1, NameType n2 )
@@ -119,7 +119,7 @@ class BlendAnimType: public RemoveLinks, public BlendAnimSelections
 };
 
 template <>
-struct BankTraits<BlendAnimType>
+struct Foundation::BankTraits<BlendAnimType>
 {
 	typedef const BlendAnimTypeName &NameType;
 	static int CompareNames( BlendAnimTypeName n1, BlendAnimTypeName n2 )
@@ -352,7 +352,7 @@ class MovesType: public RefCountWithLinks
 };
 
 template <>
-struct BankTraits<MovesType>
+struct Foundation::BankTraits<MovesType>
 {
 	typedef const MovesTypeName &NameType;
 	static int CompareNames( NameType n1, NameType n2 )

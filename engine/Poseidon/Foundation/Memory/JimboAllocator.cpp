@@ -89,7 +89,7 @@ void* JimboAllocator::New(size_t size)
     {
         _budget.Release(size); // hand the reservation back — the alloc failed
         _outOfMemory = true;
-        LOG_DEBUG(Memory, "JimboAllocator: Out of memory allocating %zu bytes", size);
+        LOG_DEBUG(Memory, "JimboAllocator: Out of memory allocating {} bytes", size);
         return nullptr;
     }
 

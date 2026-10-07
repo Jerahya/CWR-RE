@@ -1,22 +1,39 @@
-# Arma: Cold War Assault - Remastered
+# CWR-RE
 
-This repository holds the engine and game source code (codename *Poseidon*) behind *Arma: Cold War Assault* — the game first released in 2001 as *Operation Flashpoint: Cold War Crisis*. That release launched Bohemia Interactive and began the technology lineage that later grew into Real Virtuality, Arma, and Enfusion. The code has been modernized to C++20, built with CMake and Clang, with cross-platform support for Windows x64 and Linux x64.
-Bohemia Interactive is releasing it to the community that has kept this game alive for more than two decades — to study it, build on it, fix it, and create from it. Three things are worth keeping separate:
+CWR-RE is a community fork of the *Poseidon* engine and game source code that
+Bohemia Interactive released for *Arma: Cold War Assault* (originally *Operation
+Flashpoint: Cold War Crisis*, 2001). The original source release lives at
+<https://github.com/BohemiaInteractive/CWR>.
+
+**This is a modified version of that program.** It is not the original program, it is
+not an official Bohemia Interactive product, and it is not affiliated with, endorsed by,
+or associated with Bohemia Interactive or Electronic Arts. See the commit history for the
+modifications.
+
+Three things are worth keeping separate:
 
 **Source code (this repository)**
 
-The engine and game executables, licensed under GPL-3.0-or-later with additional terms under Section 7. You may use, study, modify, and redistribute it, provided it stays GPL and you follow those terms.
+The engine and game executables, licensed under GPL-3.0-or-later with additional terms
+under Section 7 (see [`LICENSE`](LICENSE)). You may use, study, modify, and redistribute
+it, provided it stays GPL and you follow those terms.
 
 **The name and brand**
 
-"ARMA", "Operation Flashpoint", and the logos are *not* granted. The trademarks stay with their owners ("ARMA" is Bohemia Interactive's). A fork must be renamed and must not present itself as "Arma" or as an official Bohemia Interactive product.
+"ARMA", "Operation Flashpoint", and their logos are not granted by the license and are not
+used as this project's name or branding. They are mentioned here only to identify where the
+source code came from.
 
 **Game data (separate)**
 
-Models, textures, sounds, missions, and voices. These are not in this repository and are not GPL; they ship separately under the APL-SA license. A free Demo is available on Steam.
+Models, textures, sounds, missions, and voices are not in this repository and are not GPL.
+They are released separately by Bohemia Interactive under the APL-SA license. To run what you
+build, use the game data from your own Steam copy of the game:
 
-In short: the code is free software, the name is not, and the game data comes separately. This license covers the source code only and grants no rights to the trademarks.
+- *Arma: Cold War Assault Remastered* demo on Steam: <https://store.steampowered.com/app/4819000>
+- *Arma: Cold War Assault Remastered* full game on Steam: <https://store.steampowered.com/app/65790>
 
+This project does not distribute game data.
 
 ## Quick Start
 
@@ -26,6 +43,47 @@ cmake --build build/win-x64-clang-rwdi
 ```
 
 On GNU/Linux, use the matching `linux-x64-clang-rwdi` preset.
+
+## Nintendo Switch (homebrew)
+
+CWR-RE builds as a Switch homebrew application (`.nro`). It boots, renders through Mesa
+(OpenGL 4.3), plays audio, and runs single-player missions with a controller. Performance
+work is ongoing, and the mission editor's controller support is incomplete.
+
+No compiled Switch binaries are distributed, and no game data, keys, or console
+modification instructions are provided. You build it yourself, use the game data from your
+own Steam copy of the game (see [Game data](#game-data--assets--arma-public-license-share-alike-apl-sa)),
+and run it on hardware you are able to run homebrew on.
+
+### Requirements
+
+- [devkitPro](https://devkitpro.org/wiki/Getting_Started) with the `switch-dev` group and
+  these portlibs: `switch-mesa switch-glad switch-openal-soft switch-curl switch-freetype
+  switch-libvorbis switch-libogg switch-libopus switch-libzstd switch-mbedtls switch-zlib
+  switch-sdl2`
+- vcpkg (`VCPKG_ROOT`) and CMake 3.25+, as for the desktop build. On a Windows host, use the
+  native Windows CMake rather than the MSYS2 one shipped with devkitPro, and keep devkitPro's
+  `msys2\usr\bin` after it on `PATH`.
+
+### Build
+
+```sh
+cmake --preset switch-aarch64-rwdi
+cmake --build build/switch-aarch64-rwdi --target PoseidonGame_nro
+```
+
+The output is `build/switch-aarch64-rwdi/switch/PoseidonGame/PoseidonGame.nro`.
+
+### Run
+
+1. Copy `PoseidonGame.nro` to `sdmc:/switch/` on the SD card.
+2. Copy the contents of the `Remastered` folder from your Steam installation of the game to
+   `sdmc:/switch/cwr-re/data/`.
+3. Launch it from the homebrew menu. Settings, saves and logs go to `sdmc:/switch/cwr-re/`.
+
+The game needs the full application memory budget; in the limited applet mode it runs out
+of memory while loading. For development, `nxlink -s PoseidonGame.nro` sends the build over
+the network and streams the game log back to the PC.
 
 ## Layout
 
@@ -49,9 +107,11 @@ On GNU/Linux, use the matching `linux-x64-clang-rwdi` preset.
 ## License
 
 The source in this repository is licensed under the **GNU General Public License
-v3.0 *or later***, with additional terms under **Section 7** of the GPL. See [`LICENSE`](LICENSE) for the
-full text.
-This license does not grant you any right to use "ARMA" or any other Bohemia Interactive trademark.
+v3.0 *or later***, with additional terms under **Section 7** of the GPL. See
+[`LICENSE`](LICENSE) for the full text, including the original copyright notice and
+the additional terms, which must accompany any copy of this program.
+This license does not grant you any right to use "ARMA" or any other Bohemia Interactive
+trademark.
 
 The [`thirdparty/`](thirdparty) directory is **excluded** from the project's GPL
 license: it contains vendored third-party code (glad, the RenderDoc API header)
@@ -59,9 +119,10 @@ under their own respective licenses — see [`thirdparty/README.md`](thirdparty/
 Dependencies pulled in via vcpkg ([`vcpkg.json`](vcpkg.json)) likewise remain under
 their own licenses.
 
-*"ARMA" is a registered trademark of BOHEMIA INTERACTIVE a.s. "OPERATION FLASHPOINT" is a registered trademark of Electronic Arts Inc.
-See [`LICENSE`](LICENSE) for information concerning trademarks. This credits file is
-informational and does not constitute any grant and/or waiver of rights.*
+*"ARMA" is a registered trademark of BOHEMIA INTERACTIVE a.s. "OPERATION FLASHPOINT" is a
+registered trademark of Electronic Arts Inc. See [`LICENSE`](LICENSE) for information
+concerning trademarks. This notice is informational and does not constitute any grant
+and/or waiver of rights.*
 
 ### Game data / assets — Arma Public License Share Alike (APL-SA)
 
@@ -71,22 +132,15 @@ by Bohemia Interactive under the **Arma Public License Share Alike (APL-SA)**:
 
 - APL-SA license text: <https://www.bohemia.net/community/licenses/arma-public-license-share-alike>
 
-### Getting game data to run what you build
+Get the game data from Steam:
 
-The compiled binaries need game data to run. You can obtain the **free Demo game
-data** on Steam:
+- *Arma: Cold War Assault Remastered* demo on Steam: <https://store.steampowered.com/app/4819000>
+- *Arma: Cold War Assault Remastered* full game on Steam: <https://store.steampowered.com/app/65790>
 
-- *Arma: Cold War Assault Remastered* Demo on Steam: <https://store.steampowered.com/app/4819000>
-
-The full game data ships with the retail game. Whatever you do with assets is
-governed by the APL-SA linked above; whatever you do with this source is governed by
-the GPL with additional terms per Section 7 in [`LICENSE`](LICENSE).
-
+Whatever you do with assets is governed by the APL-SA linked above; whatever you do
+with this source is governed by the GPL with additional terms per Section 7 in
+[`LICENSE`](LICENSE).
 
 ## Contributing
 
-This is a **locked** repository: pull requests are not accepted here, and this
-repository will not be continuously updated.
-Issues are only for bugs in official Bohemia Interactive builds distributed on
-Steam. For ideas, development builds, ports, and community work, fork the code or
-join the community continuation. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for more information.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).

@@ -568,9 +568,11 @@ NetStatus ctrlReceive(NetMessage* msg, NetStatus event, void* data)
                     LOG_INFO(Network,
                              "CreatePlayer rejected by version/mod check: server actual={} required={} mod='{}' "
                              "tag='{}'; client actual={} required={} mod='{}' tag='{}'; equalModRequired={}",
-                             _server->session.actualVersion, _server->session.requiredVersion, _server->session.mod,
-                             _server->session.versionTag, cpp->actualVersion, cpp->requiredVersion, cpp->mod,
-                             cpp->versionTag, _server->session.equalModRequired);
+                             // Unary + copies packed fields: fmt binds args by reference,
+                             // which GCC rejects for (potentially misaligned) packed members.
+                             +_server->session.actualVersion, +_server->session.requiredVersion, _server->session.mod,
+                             _server->session.versionTag, +cpp->actualVersion, +cpp->requiredVersion, cpp->mod,
+                             cpp->versionTag, +_server->session.equalModRequired);
                 }
                 // create a new player:
                 int player = 0; // dummy player ID

@@ -28,6 +28,8 @@ target_link_libraries(PoseidonOpenAL PUBLIC Poseidon)
 
 if(WIN32)
     target_link_libraries(PoseidonOpenAL PUBLIC Avrt)
+elseif(CWR_PLATFORM_SWITCH)
+    target_link_libraries(PoseidonOpenAL PUBLIC OpenAL::OpenAL)
 endif()
 
 target_include_directories(PoseidonOpenAL PUBLIC

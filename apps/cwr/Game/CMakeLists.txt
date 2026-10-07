@@ -57,6 +57,17 @@ if(WIN32)
         ws2_32.lib
         legacy_stdio_definitions.lib
     )
+elseif(CWR_PLATFORM_SWITCH)
+    target_link_libraries(PoseidonGame PRIVATE
+        -Wl,--start-group
+        GameBase
+        PoseidonGL33
+        Poseidon
+        PoseidonOpenAL
+        -Wl,--end-group
+    )
+    include(${CMAKE_SOURCE_DIR}/cmake/switch/SwitchPackaging.cmake)
+    cwr_switch_package(PoseidonGame)
 elseif(APPLE)
     target_link_libraries(PoseidonGame PRIVATE
         GameBase

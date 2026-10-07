@@ -7,7 +7,7 @@
 
 #ifdef _WIN32
 #include <Poseidon/Foundation/Common/Win.h>
-#else
+#elif !defined(__SWITCH__)
 #include <dlfcn.h>
 #endif
 
@@ -117,14 +117,15 @@ inline void UnloadModule()
 {
     if (ModuleHandle() == nullptr)
         return;
-#ifdef _WIN32
+#if defined(_WIN32)
     FreeLibrary(static_cast<HMODULE>(ModuleHandle()));
-#else
+#elif !defined(__SWITCH__)
     dlclose(ModuleHandle());
 #endif
     ModuleHandle() = nullptr;
 }
 
+#ifndef __SWITCH__
 inline void* LookupSymbol(const char* name)
 {
 #ifdef _WIN32
@@ -133,10 +134,13 @@ inline void* LookupSymbol(const char* name)
     return dlsym(ModuleHandle(), name);
 #endif
 }
+#endif
 
 inline bool TryLoadModule()
 {
-#ifdef _WIN32
+#if defined(__SWITCH__)
+    return true;
+#elif defined(_WIN32)
     ModuleHandle() = static_cast<void*>(LoadLibraryA("OpenAL32.dll"));
     if (ModuleHandle() == nullptr)
     {
@@ -166,6 +170,9 @@ inline bool TryLoadModule()
 inline bool ResolveFunctions()
 {
     Api resolved;
+#ifdef __SWITCH__
+#define RESOLVE_OPENAL_FUNCTION(name) resolved.name = &::name;
+#else
 #define RESOLVE_OPENAL_FUNCTION(name)                                                                                   \
     resolved.name = reinterpret_cast<decltype(resolved.name)>(LookupSymbol(#name));                                    \
     if (resolved.name == nullptr)                                                                                       \
@@ -173,6 +180,7 @@ inline bool ResolveFunctions()
         SetError("Missing OpenAL symbol: " #name);                                                                      \
         return false;                                                                                                   \
     }
+#endif
     OPENAL_RUNTIME_FUNCTIONS(RESOLVE_OPENAL_FUNCTION)
 #undef RESOLVE_OPENAL_FUNCTION
 

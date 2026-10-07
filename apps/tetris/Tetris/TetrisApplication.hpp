@@ -13,7 +13,7 @@ class TetrisApplication : public GameApplication
 
     /// Parse the command line and seed `GamePaths` with a Tetris-only
     /// user-data dir so display.cfg / graphics.cfg / audio.cfg from the
-    /// main Cold War Assault install don't leak in here — Tetris always
+    /// main game install don't leak in here — Tetris always
     /// boots against fresh defaults.
     bool ParseCommandLine(const char* commandLine) override;
 

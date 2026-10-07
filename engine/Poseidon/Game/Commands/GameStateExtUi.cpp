@@ -967,8 +967,6 @@ GameValue VoiceLanguage(const GameState* /*state*/)
     return GameValue(RString(GetSelectedVoiceLanguage().c_str()));
 }
 
-const ParamEntry* FindMusic(RString name, SoundPars& pars);
-
 GameValue PlayMusic(const GameState* state, GameValuePar oper1)
 {
     if (oper1.GetType() == GameArray)

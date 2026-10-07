@@ -109,7 +109,7 @@ class WeightInfo: public RefCount
 
 
 template<>
-struct BankTraits<WeightInfo>
+struct Foundation::BankTraits<WeightInfo>
 {
 	typedef const WeightInfoName &NameType;
 	static int CompareNames( const WeightInfoName &n1, const WeightInfoName &n2 )
@@ -141,7 +141,7 @@ class Skeleton: public RefCountWithLinks
 };
 
 template<>
-struct BankTraits<Skeleton>
+struct Foundation::BankTraits<Skeleton>
 {
 	typedef const RStringB &NameType;
 	static int CompareNames( NameType n1, NameType n2 )

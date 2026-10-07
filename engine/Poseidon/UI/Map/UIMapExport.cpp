@@ -933,7 +933,7 @@ void ExportWMF(const char* name, bool grid)
     rect.right = toInt(Coef * LandSize);
     rect.top = 0;
     rect.bottom = toInt(Coef * LandSize);
-    RString description = "Cold War Assault Map";
+    RString description = "CWR-RE Map";
     HDC hDC = CreateEnhMetaFile(nullptr, name, &rect, description);
     SetMapMode(hDC, MM_HIMETRIC);
     SetBkMode(hDC, TRANSPARENT);

@@ -267,7 +267,11 @@ target_include_directories(Poseidon PUBLIC
 target_link_libraries(Poseidon PUBLIC
     spdlog::spdlog
 )
-if(NOT WIN32)
+if(CWR_PLATFORM_SWITCH)
+    # Switch: libnx's switch.specs provides pthread; there is no libdl.
+    # No mmap either: NO_MMAP selects the engine's loaded-buffer file access.
+    target_compile_definitions(Poseidon PUBLIC NO_MMAP)
+elseif(NOT WIN32)
     target_link_libraries(Poseidon PUBLIC pthread dl)
 endif()
 
@@ -313,12 +317,21 @@ find_package(Stb REQUIRED)
 target_include_directories(Poseidon PRIVATE ${Stb_INCLUDE_DIR})
 
 # mimalloc
-find_package(mimalloc CONFIG REQUIRED)
-target_link_libraries(Poseidon PUBLIC mimalloc-static)
-target_compile_definitions(Poseidon PUBLIC MI_STATIC_LIB)
+if(CWR_PLATFORM_SWITCH)
+    # Switch: no mimalloc port for libnx — a minimal mimalloc.h on newlib malloc
+    # stands in for the calls JimboAllocator makes.
+    target_include_directories(Poseidon BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/cmake/switch/include)
+else()
+    find_package(mimalloc CONFIG REQUIRED)
+    target_link_libraries(Poseidon PUBLIC mimalloc-static)
+    target_compile_definitions(Poseidon PUBLIC MI_STATIC_LIB)
+endif()
 
 # SDL3 — input + window
-find_package(SDL3 CONFIG REQUIRED)
+if(NOT CWR_PLATFORM_SWITCH)
+    find_package(SDL3 CONFIG REQUIRED)
+endif()
+# Switch: SDL3::SDL3 is the SDL3Compat target (SDL3 API on devkitPro's SDL2).
 target_link_libraries(Poseidon PUBLIC SDL3::SDL3)
 
 target_link_libraries(Poseidon PUBLIC enkiTS::enkiTS)

@@ -74,7 +74,7 @@ struct ActionContextGetIn : public ActionContextBase
 };
 
 template <>
-struct BankTraits<AnimationRT>
+struct Foundation::BankTraits<AnimationRT>
 {
     typedef const AnimationRTName& NameType;
     static int CompareNames(const AnimationRTName& n1, const AnimationRTName& n2)

@@ -83,7 +83,7 @@ bool TetrisApplication::ParseCommandLine(const char* commandLine)
     // resolves it.  GamePaths::Initialize is idempotent — the first
     // caller wins — so this keeps Tetris's display.cfg / graphics.cfg /
     // audio.cfg under %APPDATA%/PoseidonTetris/ instead of sharing the
-    // main Cold War Assault install's %APPDATA%/CWR/.
+    // main game install's %APPDATA%/CWR-RE/.
     GamePaths::Instance().Initialize("PoseidonTetris", "PoseidonTetris");
     return GameApplication::ParseCommandLine(commandLine);
 }

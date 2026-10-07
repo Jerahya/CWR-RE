@@ -22,12 +22,25 @@ int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 
 #include "GameApplication.hpp"
 #include <Poseidon/Foundation/Platform/CrashHandler.hpp>
+#ifdef __SWITCH__
+#include <Poseidon/Foundation/Platform/PlatformSwitch.hpp>
+#endif
 
 int main(int argc, char* argv[])
 {
+#ifdef __SWITCH__
+    Poseidon::Foundation::SwitchStartup(argc, argv);
+#endif
     Poseidon::Foundation::InstallCrashHandler(nullptr);
-    GameApplication app;
-    return app.Run(argc, argv);
+    int result = 0;
+    {
+        GameApplication app;
+        result = app.Run(argc, argv);
+    }
+#ifdef __SWITCH__
+    Poseidon::Foundation::SwitchShutdown();
+#endif
+    return result;
 }
 
 #endif

@@ -54,7 +54,7 @@ namespace Poseidon
 
 
 template <>
-struct BankTraits<DynSound>
+struct Foundation::BankTraits<DynSound>
 {
 	typedef const char *NameType;
 	static int CompareNames(const char *n1, const char *n2)

@@ -284,7 +284,13 @@ EngineGL33::EngineGL33(int width, int height, bool windowed, int bpp)
     // on in all builds because the day-to-day RelWithDebInfo build is
     // what we develop against, and gating on _DEBUG would leave us without
     // the per-error GL log there.
+#ifdef __SWITCH__
+    // Switch (Mesa nouveau): a debug context validates and logs every call, too
+    // costly on Tegra; shipping-style context only.
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+#else
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
+#endif
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);

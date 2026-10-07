@@ -89,11 +89,11 @@ int main(int argc, char** argv)
     Poseidon::Foundation::gSoftAssert = true;
     InitLibraryElement();
     Poseidon::InitDefaults();
-    GamePaths::Instance().Initialize("CWR", "ColdWarAssault", "Cold War Assault");
+    GamePaths::Instance().Initialize("CWR-RE", "CWR-RE", "CWR-RE");
     Poseidon::GEngine = Poseidon::CreateEngineDummy();
     static ToolApplication toolApp;
 
-    CLI::App app{"PoseidonTools - Command-line utilities for Arma: Cold War Assault - Remastered"};
+    CLI::App app{"PoseidonTools - Command-line utilities for CWR-RE"};
 
     app.set_version_flag("-v,--version", "1.0.0");
     app.require_subcommand(1);

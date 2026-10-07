@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
     Poseidon::RegisterOpenALAudioBackend();
     Poseidon::RegisterOpenALVoiceBackend();
 
-    CLI::App cliApp{"PoseidonStudio - Asset browser and previewer for Arma: Cold War Assault - Remastered"};
+    CLI::App cliApp{"PoseidonStudio - Asset browser and previewer for CWR-RE"};
 
     std::string gamePath;
     std::string openFile;
